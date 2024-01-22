@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cards Against Top Brick</title>
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-family: Verdana, sans-serif;
+    }
+
+    .row {
+      display: flex;
+      margin: 10px 0;
+    }
+
+    .square {
+      width: 200px;
+      height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 5px;
+      border: 1px solid #000;
+      color: #fff;
+      font-size: 12px;
+    }
+
+    .black {
+      background-color: #000;
+      color: #fff;
+    }
+
+    .white {
+      background-color: #fff;
+      color: #000;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 10px;
+    }
+
+    .instructions {
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    .points-container {
+      display: flex;
+      align-items: center;
+      margin-top: 10px;
+    }
+
+    #points {
+      margin: 0 10px;
+      font-size: 18px;
+    }
+
+    .arrow {
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- First Row -->
+  <div class="row">
+    <div class="square black" id="blackSquare">Random Text</div>
+  </div>
+
+  <!-- Second Row -->
+  <div class="row">
+    <div class="square white" id="whiteSquare1">Random Text</div>
+    <div class="square white" id="whiteSquare2">Random Text</div>
+    <div class="square white" id="whiteSquare3">Random Text</div>
+    <div class="square white" id="whiteSquare4">Random Text</div>
+    <div class="square white" id="whiteSquare5">Random Text</div>
+  </div>
+
+  <!-- Third Row -->
+  <div class="row">
+    <div class="square white" id="whiteSquare6">Random Text</div>
+    <div class="square white" id="whiteSquare7">Random Text</div>
+    <div class="square white" id="whiteSquare8">Random Text</div>
+    <div class="square white" id="whiteSquare9">Random Text</div>
+    <div class="square white" id="whiteSquare10">Random Text</div>
+  </div>
+
+  <!-- Fourth Row -->
+  <div class="points-container">
+    <button class="arrow" onclick="decreasePoints()">-</button>
+    <div id="points">Your Points: <span id="userPoints">0</span></div>
+    <button class="arrow" onclick="increasePoints()">+</button>
+    <button onclick="shuffleText()">Shuffle Yo Mothafuckin Cards</button>
+  </div>
+
+  <!-- Fifth Row - Instructions -->
+  <div class="instructions">
+    <h2>How to play Cards Against Top Brick?</h2>
+    <p>One of you is chosen as the Card Tsar.</p>
+    <p>The black square is the QUESTION CARD, and the white ones are the ANSWER CARDS.</p>
+    <p>To begin, everyone presses the SHUFFLE button to generate new question and answer cards.</p>
+    <p>The Card Tsar then reads his QUESTION (Black) card out loud. Everyone must then answer with their funniest/weirdest/etc ANSWER (White) card, including the Tsar.</p>
+    <p>After everyone answered, the Card Tsar awards ONE POINT to the funniest answer. The person who gave that answer then gets one point.</p>
+    <p>And then, a new Card Tsar is chosen, and the game continues! Big woop.</p>
+    <p>p.s. keep track of your points by using the Your Points buttons next to the Shuffle button! Don't cheat though!</p>
+    <p>----</p>
+    <p>Coded by Emersonac Reviews for the funny.</p>
+    <p><a href="mobile.html">CLICK/TAP HERE FOR THE MOBILE FRIENDLY VERSION OF THE SITE</a></p>
+  </div>
+
+  <script>
+    // Sample lists
+    const list1 = [
+    "In its new tourism campaign, Detroit proudly proclaims that it has finally eliminated _____.",
+    "_____ is a slippery slope that leads to _____.",
+    "What does Dick Cheney prefer?",
+    "In L.A. County Jail, word is you can trade 200 cigarettes for _____.",
+    "_____: Good to the last drop.",
+    "What don't you want to find in your Chinese food?",
+    "In M. Night Shyamalan's new movie, Bruce Willis discovers that _____ had really been _____ all along.",
+    "_____: Kid-tested, mother-approved.",
+    "What ended my last relationship?",
+    "In Michael Jackson's final moments, he thought about _____.",
+    "_____? There's an app for that.",
+    "What gets better with age?",
+    "In Rome, there are whisperings that the Vatican has a secret room devoted to _____.",
+    "_____. Betcha can't have just one!",
+    "What gives me uncontrollable gas?",
+    "In the distant future, historians will agree that _____ marked the beginning of America's decline.",
+    "_____. High five, bro.",
+    "What has been making life difficult at the nudist colony?",
+    "In the new Disney Channel Original Movie, Hannah Montana struggles with _____ for the first time.",
+    "_____. It's a trap!",
+    "What helps Obama unwind?",
+    "Instead of coal, Santa now gives the bad children _____.",
+    "_____. That's how I want to die.",
+    "What is Batman's guilty pleasure?",
+    "It's a pity that kids these days are all getting involved with _____.",
+    "A romantic, candlelit dinner would be incomplete without _____.",
+    "What never fails to liven up the party?",
+    "It's a trap!",
+    "After Hurricane Katrina, Sean Penn brought _____ to the people of New Orleans.",
+    "What will always get you laid?",
+    "Life for American Indians was forever changed when the White Man introduced them to _____.",
+    "After the earthquake, Sean Penn brought _____ to the people of Haiti.",
+    "What will I bring back in time to convince people that I am a powerful wizard?",
+    "Life was difficult for cavemen before _____.",
+    "Alternative medicine is now embracing the curative powers of _____.",
+    "What would grandma find disturbing, yet oddly charming?",
+    "Lifetime presents _____, the story of _____.",
+    "And I would have gotten away with it, too, if it hadn't been for _____.",
+    "What's a girl's best friend?",
+    "Major League Baseball has banned _____ for giving players an unfair advantage.",
+    "And the Academy Award for _____ goes to _____.",
+    "What's my antidrug?",
+    "Maybe she's born with it. Maybe it's _____.",
+    "Anthropologists have recently discovered a primitive tribe that worships _____.",
+    "What's my secret power?",
+    "MTV's new reality show features eight washed-up celebrities living with _____.",
+    "Betcha can't have just one!",
+    "What's Teach for America using to inspire inner city students to succeed?",
+    "Next from J.K. Rowling: Harry Potter and the Chamber of _____.",
+    "BILLY MAYS HERE FOR _____!",
+    "What's that smell?",
+    "Next on ESPN2: The World Series of _____.",
+    "But before I kill you, Mr. Bond, I must show you _____.",
+    "What's that sound?",
+    "Rumor has it that Vladimir Putin's favorite dish is _____ stuffed with _____.",
+    "Coming to Broadway this season, _____: The Musical.",
+    "What's the crustiest?",
+    "Science will never explain the origin of _____.",
+    "Dear Abby, I'm having some trouble with _____ and would like your advice.",
+    "What's the gift that keeps on giving?",
+    "Sorry everyone, I just _____.",
+    "Due to a PR fiasco, Walmart no longer offers _____.",
+    "What's the most emo?",
+    "Studies show that lab rats navigate mazes 50% faster after being exposed to _____.",
+    "During Picasso's often-overlooked Brown Period, he produced hundreds of paintings of _____.",
+    "What's the new fad diet?",
+    "That's right, I killed _____. How, you ask? _____.",
+    "During sex, I like to think about _____.",
+    "What's the next Happy Meal toy?",
+    "The CIA now interrogates enemy agents by repeatedly subjecting them to _____.",
+    "For my next trick, I will pull _____ out of _____.",
+    "What's the next superhero/sidekick duo?",
+    "The class field trip was completely ruined by _____.",
+    "He who controls _____ controls the world.",
+    "What's there a ton of in heaven?",
+    "The socialist governments of Scandinavia have declared that access to _____ is a basic human right.",
+    "How am I maintaining my relationship status?",
+    "When all else fails, I can always masturbate to _____.",
+    "The U.S. has begun airdropping _____ to the children of Afghanistan.",
+    "I do not know with what weapons World War III will be fought, but World War IV will be fought with _____.",
+    "When I am a billionaire, I shall erect a 50-foot statue to commemorate _____.",
+    "This is the way the world ends \\ This is the way the world ends \\ Not with a bang but with _____.",
+    "I drink to forget _____.",
+    "When I am President of the United States, I will create the Department of _____.",
+    "This season on Man vs. Wild, Bear Grylls must survive in the depths of the Amazon with only _____ and his wits.",
+    "I got 99 problems but _____ ain't one.",
+    "When I pooped, what came out of my butt?",
+    "TSA guidelines now prohibit _____ on airplanes.",
+    "I learned the hard way that you can't cheer up a grieving friend with _____.",
+    "When I was tripping on acid, _____ turned into _____.",
+    "War! What is it good for?",
+    "I never truly understood _____ until I encountered _____.",
+    "When I'm in prison, I'll have _____ smuggled in.",
+    "What am I giving up for Lent?",
+    "I wish I hadn't lost the instruction manual for _____.",
+    "When Pharaoh remained unmoved, Moses called down a Plague of _____.",
+    "What are my parents hiding from me?",
+    "I'm sorry, Professor, but I couldn't complete my homework because of _____.",
+    "While the United States raced the Soviet Union to the moon, the Mexican government funneled millions of pesos into research on _____.",
+    "What brought the orgy to a grinding halt?",
+    "In 1,000 years, when paper money is but a distant memory, _____ will be our currency.",
+    "White people like _____.",
+    "What did I bring back from Mexico?",
+    "In a world ravaged by _____, our only solace is _____.",
+    "Who stole the cookies from the cookie jar?",
+    "What did the US airdrop to the children of Afghanistan?",
+    "In an attempt to reach a wider audience, the Smithsonian Museum of Natural History has opened an interactive exhibit on _____.",
+    "Why am I sticky?",
+    "What did Vin Diesel eat for dinner?",
+    "In his new self-produced album, Kanye West raps over the sounds of _____.",
+    "Why can't I sleep at night?",
+    "What do old people smell like?",
+    "In his new summer comedy, Rob Schneider is _____ trapped in the body of _____.",
+    "Why do I hurt all over?",
+    "We don't allow ______ at the Country Club."
+    ];
+
+
+    const list2 = [
+    "Cockfights",
+    "A Gypsy curse",
+    "40000 Mexican Slaves",
+    "Dead parents",
+    "Friendly fire",
+    "A moment of silence",
+    "Object permanence",
+    "Ronald Reagan",
+    "A sausage festival",
+    "Opposable thumbs",
+    "A disappointing birthday party",
+    "An honest cop with nothing left to lose",
+    "Racially-biased SAT questions",
+    "A sassy black woman",
+    "Famine",
+    "Jibber-jabber",
+    "Mathletes",
+    "Flesh-eating bacteria",
+    "Chainsaws for hands",
+    "A tiny horse",
+    "Flying sex snakes",
+    "Nicolas Cage",
+    "William Shatner",
+    "Not giving a shit about the Third World",
+    "Child beauty pageants",
+    "Riding off into the sunset",
+    "Sexting",
+    "Explosions",
+    "An M. Night Shyamalan plot twist",
+    "Sniffing glue",
+    "Shapeshifters",
+    "Jew-fros",
+    "Porn stars",
+    "Glenn Beck being harried by a swarm of buzzards",
+    "Mutually-assured destruction",
+    "Raping and pillaging",
+    "Repression",
+    "Pedophiles",
+    "72 virgins",
+    "Roofies",
+    "Yeast",
+    "A drive-by shooting",
+    "My vagina",
+    "Grave robbing",
+    "A time travel paradox",
+    "Assless chaps",
+    "Eating the last known bison",
+    "Authentic Mexican cuisine",
+    "A murder most foul",
+    "Catapults",
+    "Bling",
+    "Giving 110 percent",
+    "Poor people",
+    "Consultants",
+    "Her Royal Highness, Queen Elizabeth II",
+    "Forgetting the Alamo",
+    "Crippling debt",
+    "The Trail of Tears",
+    "The Hustle",
+    "Daddy issues",
+    "Being marginalized",
+    "The Force",
+    "The Donald Trump Seal of Approval",
+    "Goblins",
+    "Wiping her butt",
+    "Dropping a chandelier on your enemies and riding the rope up",
+    "Hope",
+    "Intelligent design",
+    "Former President George W. Bush",
+    "The Rev. Dr. Martin Luther King, Jr.",
+    "Loose lips",
+    "Full frontal nudity",
+    "A micro-penis",
+    "AIDS",
+    "Hormone injections",
+    "My soul",
+    "Pictures of boobs",
+    "Laying an egg",
+    "A hot mess",
+    "The Übermensch",
+    "Getting naked and watching Nickelodeon",
+    "Vikings",
+    "Sarah Palin",
+    "Pretending to care",
+    "Hot people",
+    "American Gladiators",
+    "Public ridicule",
+    "Seduction",
+    "Getting really high",
+    "Sharing needles",
+    "An Oedipus complex",
+    "Scientology",
+    "Boogers",
+    "Geese",
+    "Penis envy",
+    "The inevitable heat death of the universe",
+    "Global warming",
+    "Praying the gay away",
+    "The miracle of childbirth",
+    "New Age music",
+    "Frolicking",
+    "The Rapture",
+    "Hot Pockets",
+    "Two midgets shitting into a bucket",
+    "Whipping it out",
+    "Making a pouty face",
+    "The KKK",
+    "White privilege",
+    "Vehicular manslaughter",
+    "Genghis Khan",
+    "Wifely duties",
+    "Women's suffrage",
+    "Crystal meth",
+    "The Hamburglar",
+    "A defective condom",
+    "Serfdom",
+    "AXE Body Spray",
+    "Judge Judy",
+    "Stranger danger",
+    "The Blood of Christ",
+    "African children",
+    "A Bop It",
+    "Horrifying laser hair removal accidents",
+    "The Virginia Tech Massacre",
+    "Shaquille O'Neal's acting career",
+    "BATMAN!!!",
+    "Barack Obama",
+    "Prancing",
+    "Agriculture",
+    "Asians who aren't good at math",
+    "Vigilante justice",
+    "A robust mongoloid",
+    "Elderly Japanese men",
+    "Overcompensation",
+    "Natural selection",
+    "Exchanging pleasantries",
+    "Pixelated bukkake",
+    "Coat hanger abortions",
+    "Heteronormativity",
+    "A lifetime of sadness",
+    "Eating all of the cookies before the AIDS bake-sale",
+    "Parting the Red Sea",
+    "Racism",
+    "Michelle Obama's arms",
+    "Arnold Schwarzenegger",
+    "Dwarf tossing",
+    "The World of Warcraft",
+    "Road head",
+    "Sunshine and rainbows",
+    "Swooping",
+    "Spectacular abs",
+    "A monkey smoking a cigar",
+    "Obesity",
+    "Figgy pudding",
+    "Flash flooding",
+    "A homoerotic volleyball montage",
+    "A mopey zoo lion",
+    "Lance Armstrong's missing testicle",
+    "Lockjaw",
+    "A bag of magic beans",
+    "Dry heaving",
+    "A mating display",
+    "Poor life choices",
+    "The terrorists",
+    "Testicular torsion",
+    "My sex life",
+    "Linsday Lohan at 55",
+    "All-you-can-eat shrimp for $4.99",
+    "Auschwitz",
+    "Attitude",
+    "Domino's Oreo Dessert Pizza",
+    "A snapping turtle biting the tip of your penis",
+    "Breaking out into song and dance",
+    "Kanye West",
+    "A thermonuclear detonation",
+    "Leprosy",
+    "Hot cheese",
+    "The clitoris",
+    "Gloryholes",
+    "Raptor attacks",
+    "The Big Bang",
+    "Nipple blades",
+    "Taking off your shirt",
+    "Land mines",
+    "The heart of a child",
+    "Smegma",
+    "Friends who eat all the snacks",
+    "Puppies!",
+    "Alcoholism",
+    "Goats eating cans",
+    "Waking up halfnaked in a Denny's parking lot",
+    "A middle-aged man on roller skates",
+    "The Dance of the Sugar Plum Fairy",
+    "Dental dams",
+    "The Care Bear Stare",
+    "Jerking off into a pool of children's tears",
+    "Toni Morrison's vagina",
+    "Bingeing and purging",
+    "Man meat",
+    "The taint; the grundle; the fleshy fun-bridge",
+    "Oversized lollipops",
+    "Me time",
+    "Active listening",
+    "Self-loathing",
+    "The Underground Railroad",
+    "Ethnic cleansing",
+    "Children on leashes",
+    "Poorly-timed Holocaust jokes",
+    "The Little Engine That Could",
+    "Half-assed foreplay",
+    "A sea of troubles",
+    "The invisible hand",
+    "The Holy Bible",
+    "Lumberjack fantasies",
+    "Waiting til marriage",
+    "German dungeon porn",
+    "Morgan Freeman's voice",
+    "Unfathomable stupidity",
+    "Being on fire",
+    "Women in yogurt commercials",
+    "Euphoria by Calvin Klein",
+    "Teenage pregnancy",
+    "Natural male enhancement",
+    "Re-gifting",
+    "Gandhi",
+    "Being a motherfucking sorcerer",
+    "Autocannibalism",
+    "Leaving an awkward voicemail",
+    "Genital piercings",
+    "Erectile dysfunction",
+    "Uppercuts",
+    "Passable transvestites",
+    "My collection of high-tech sex toys",
+    "Customer service representatives",
+    "Sexy pillow fights",
+    "The Pope",
+    "An erection that lasts longer than four hours",
+    "Balls",
+    "White people",
+    "My genitals",
+    "Grandma",
+    "Tentacle porn",
+    "Picking up girls at the abortion clinic",
+    "Friction",
+    "Glenn Beck convulsively vomiting as a brood of crab spiders hatches in his brain and erupts from his tear ducts",
+    "Science",
+    "Party Poopers",
+    "Too much hair gel",
+    "Not reciprocating oral sex",
+    "Farting and walking away",
+    "Seppuku",
+    "Flightless birds",
+    "Being a dick to children",
+    "Same-sex ice dancing",
+    "A good sniff",
+    "Booby-trapping the house to foil burglars",
+    "Cheating in the Special Olympics",
+    "Waterboarding",
+    "The Tempur-Pedic Swedish Sleep System",
+    "Charisma",
+    "A balanced breakfast",
+    "Dying",
+    "Keanu Reeves",
+    "Historically black colleges",
+    "Hurricane Katrina",
+    "Sean Penn",
+    "Actually taking candy from a baby",
+    "The gays",
+    "Nickelback",
+    "The Make-A-Wish Foundation",
+    "The folly of man",
+    "A look-see",
+    "A clandestine butt scratch",
+    "Men",
+    "Pooping back and forth. Forever.",
+    "The Amish",
+    "Passive-aggressive Post-it notes",
+    "Menstruation",
+    "The Chinese gymnastics team",
+    "Pterodactyl eggs",
+    "Kids with ass cancer",
+    "Switching to Geico",
+    "Team-building exercises",
+    "A salty surprise",
+    "Peeing a little bit",
+    "A brain tumor",
+    "The South",
+    "Home video of Oprah sobbing into a Lean Cuisine",
+    "Cards Against Humanity",
+    "The violation of our most basic human rights",
+    "Nocturnal emissions",
+    "Fear itself",
+    "YOU MUST CONSTRUCT ADDITIONAL PYLONS",
+    "The Jews",
+    "Lady Gaga",
+    "Date rape",
+    "My humps",
+    "The milk man",
+    "Being fabulous",
+    "Powerful thighs",
+    "A foul mouth",
+    "Necrophilia",
+    "Winking at old people",
+    "A big black dick",
+    "Centaurs",
+    "Mr. Clean, right behind you",
+    "A beached whale",
+    "Bill Nye the Science Guy",
+    "A gentle caress of the inner thigh",
+    "A bloody pacifier",
+    "Black people",
+    "Sexual tension",
+    "A crappy little hand",
+    "Chivalry",
+    "The forbidden fruit",
+    "A low standard of living",
+    "Lunchables",
+    "Skeletor",
+    "A nuanced critique",
+    "Bitches",
+    "Fancy Feast",
+    "Panty raids",
+    "The profoundly handicapped",
+    "Being rich",
+    "A passionate Latino lover",
+    "Heartwarming orphans",
+    "Sweet, sweet vengeance",
+    "A rival dojo",
+    "MechaHitler",
+    "Republicans",
+    "A web of lies",
+    "Fiery poops",
+    "A gassy antelope",
+    "A woman scorned",
+    "Another goddamn vampire movie",
+    "Natalie Portman",
+    "Clams",
+    "Tangled Slinkys",
+    "Copping a feel",
+    "Apologizing",
+    "The true meaning of Christmas",
+    "Kamikaze pilots",
+    "Appreciative snapping",
+    "Estrogen",
+    "Sean Connery",
+    "Neil Patrick Harris",
+    "A zesty breakfast burrito",
+    "The homosexual agenda",
+    "Beating your wives",
+    "That thing that electrocutes your abs",
+    "The hardworking Mexican",
+    "Being a dinosaur",
+    "Passing a kidney stone",
+    "A falcon with a cap on its head",
+    "Shaft",
+    "A bleached asshole",
+    "Altar boys",
+    "Bosnian chicken farmers",
+    "Michael Jackson",
+    "The Kool-Aid Man",
+    "Nubile slave boys",
+    "Cybernetic enhancements",
+    "Getting so angry that you pop a boner",
+    "Carnies",
+    "Guys who don't call",
+    "Free samples",
+    "Coughing into a vagina",
+    "Smallpox blankets",
+    "A big hoopla about nothing",
+    "Suicidal thoughts",
+    "Masturbation",
+    "Doing the right thing",
+    "Dancing with a broom",
+    "Classist undertones",
+    "The Three-Fifths compromise",
+    "Deflowering the princess",
+    "Queefing",
+    "Lactation",
+    "Dorito breath",
+    "Concealing a boner",
+    "World peace",
+    "Eating an albino",
+    "Edible underpants",
+    "RoboCop",
+    "Enormous Scandinavian women",
+    "Viagra",
+    "Chutzpah",
+    "Fabricating statistics",
+    "Soup that is too hot",
+    "Justin Bieber",
+    "Finding a skeleton",
+    "Muhammad (Praise Be Unto Him)",
+    "Oompa-Loompas",
+    "Gandalf",
+    "Surprise Butt-Sex!",
+    "Genetically engineered supersoldiers",
+    "Inappropriate yodeling",
+    "Five-Dollar Footlongs",
+    "Puberty",
+    "George Clooney's musk",
+    "Drinking alone",
+    "Ghosts",
+    "Getting abducted by Peter Pan",
+    "Dick fingers",
+    "An asymmetric boob job",
+    "Getting in her pants, politely",
+    "Multiple stab wounds",
+    "Vigorous jazz hands",
+    "Gladiatorial combat",
+    "Soiling oneself",
+    "Fingering",
+    "Good grammar",
+    "Child abuse",
+    "Glenn Beck catching his scrotum on a curtain hook",
+    "Hipsters",
+    "Anal beads",
+    "GoGurt",
+    "Historical revisionism",
+    "Civilian casualties",
+    "Police brutality",
+    "Insatiable bloodlust",
+    "Pulling out",
+    "John Wilkes Booth",
+    "Jafar",
+    "Robert Downey Jr",
+    "Preteens",
+    "Jean-Claude Van Damme",
+    "Horse meat",
+    "Scalping",
+    "Just the tip",
+    "A really cool hat",
+    "Stifling a giggle at the mention of Hutus and Tutsis",
+    "Mad hacky-sack skills",
+    "Kim Jong-il",
+    "Tweeting",
+    "Leveling up",
+    "A stray pube",
+    "Darth Vader",
+    "Literally eating shit",
+    "Jewish fraternities",
+    "A sad handjob",
+    "Making the penises kiss",
+    "The token minority",
+    "Exactly what you'd expect",
+    "Media coverage",
+    "Doin' it in the butt",
+    "Expecting a burp and vomiting on the floor",
+    "Medieval Times Dinner and Tournament",
+    "Feeding Rosie O'Donnell",
+    "Adderall",
+    "Moral ambiguity",
+    "Teaching a robot to love",
+    "Embryonic stem cells",
+    "My machete",
+    "A can of whoop-ass",
+    "Tasteful side-boob",
+    "One thousand Slim Jims",
+    "A windmill full of corpses",
+    "Panda sex",
+    "Ominous background music",
+    "Count Chocula",
+    "An icepick lobotomy",
+    "Overpowering your father",
+    "Wearing underwear inside-out to avoid doing laundry",
+    "Tom Cruise",
+    "Pistol-whipping a hostage",
+    "A death ray",
+    "Mouth herpes",
+    "Quiche",
+    "The glass ceiling",
+    "Sperm whales",
+    "Quivering jowls",
+    "A cooler full of organs",
+    "Homeless people",
+    "Revenge fucking",
+    "The American Dream",
+    "Third base",
+    "Ripping into a man's chest and pulling out his still-beating heart",
+    "Keg stands",
+    "Incest",
+    "Ryan Gosling riding in on a white horse",
+    "When you fart and a little bit comes out",
+    "Pac-Man uncontrollably guzzling cum",
+    "Santa Claus",
+    "Take-backsies",
+    "A mime having a stroke",
+    "Scrotum tickling",
+    "Dead babies",
+    "Hulk Hogan",
+    "Sexual humiliation",
+    "Foreskin",
+    "God",
+    "Sexy Siamese twins",
+    "Saxophone solos",
+    "Scrubbing under the folds",
+    "Slow motion",
+    "Italians",
+    "Golden showers",
+    "Space muffins",
+    "A fetus",
+    "Emotions",
+    "Statistically validated stereotypes",
+    "Firing a rifle into the air while balls deep in a squealing hog",
+    "Licking things to claim them as your own",
+    "Sudden Poop Explosion Disease",
+    "Dick Cheney",
+    "Pabst Blue Ribbon",
+    "The boners of the elderly",
+    "Amputees",
+    "The placenta",
+    "The economy",
+    "Eugenics",
+    "Spontaneous human combustion",
+    "The Fanta girls",
+    "My relationship status",
+    "Friends with benefits",
+    "The Gulags",
+    "Christopher Walken",
+    "Finger painting",
+    "The harsh light of day",
+    "Bees?",
+    "The hiccups",
+    "Old-people smell",
+    "Harry Potter erotica",
+    "Dying of dysentery",
+    "The shambling corpse of Larry King",
+    "College",
+    "My inner demons",
+    "The four arms of Vishnu",
+    "Getting drunk on mouthwash",
+    "A Super Soaker full of cat pee",
+    "Being a busy adult with many important things to do",
+    "Nazis",
+    "Aaron Burr",
+    "Tripping balls",
+    "8 oz of sweet Mexican black-tar heroin",
+    "Words, words, words",
+    "Cuddling",
+    "Stephen Hawking talking dirty",
+    "The chronic",
+    "Zeus's sexual appetites"
+    ];
+
+    let userPoints = 0;
+
+    // Function to shuffle text on squares
+    function shuffleText() {
+      document.getElementById("blackSquare").innerText = getRandomText(list1);
+      document.getElementById("whiteSquare1").innerText = getRandomText(list2);
+      document.getElementById("whiteSquare2").innerText = getRandomText(list2);
+      document.getElementById("whiteSquare3").innerText = getRandomText(list2);
+      document.getElementById("whiteSquare4").innerText = getRandomText(list2);
+      document.getElementById("whiteSquare5").innerText = getRandomText(list2);
+      document.getElementById("whiteSquare6").innerText = getRandomText(list2);
+      document.getElementById("whiteSquare7").innerText = getRandomText(list2);
+      document.getElementById("whiteSquare8").innerText = getRandomText(list2);
+      document.getElementById("whiteSquare9").innerText = getRandomText(list2);
+      document.getElementById("whiteSquare10").innerText = getRandomText(list2);
+    }
+
+    // Function to get random text from a list
+    function getRandomText(textList) {
+      const randomIndex = Math.floor(Math.random() * textList.length);
+      return textList[randomIndex];
+    }
+
+    // Function to increase user points
+    function increasePoints() {
+      userPoints++;
+      updatePoints();
+    }
+
+    // Function to decrease user points
+    function decreasePoints() {
+      userPoints--;
+      updatePoints();
+    }
+
+    // Function to update points display
+    function updatePoints() {
+      document.getElementById("userPoints").innerText = userPoints;
+    }
+  </script>
+</body>
+</html>
